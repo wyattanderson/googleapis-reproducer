@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "googleapis-reproducer",
+    srcs = ["main.go"],
+    importpath = "github.com/wyattanderson/googleapis-reproducer/v1",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_google_cloud_go_vision//apiv1",
+        "@go_googleapis//google/cloud/vision/v1:vision_go_proto",
+    ],
+)
