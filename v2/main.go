@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	_ "cloud.google.com/go/vision/v2/apiv1"
 	_ "cloud.google.com/go/vision/v2/apiv1/visionpb"
 	_ "google.golang.org/grpc"
@@ -9,5 +11,5 @@ import (
 )
 
 func main() {
-
+	fmt.Println("hello from v2")
 }

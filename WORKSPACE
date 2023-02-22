@@ -21,6 +21,17 @@ http_archive(
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 
+http_archive(
+    name = "aspect_bazel_lib",
+    sha256 = "f8fa3193009232ca989de21964ea860c8b3279ec73ba6eff456d8bf61fb3ab1f",
+    strip_prefix = "bazel-lib-1.27.0",
+    url = "https://github.com/aspect-build/bazel-lib/releases/download/v1.27.0/bazel-lib-v1.27.0.tar.gz",
+)
+
+load("@aspect_bazel_lib//lib:repositories.bzl", "aspect_bazel_lib_dependencies")
+
+aspect_bazel_lib_dependencies()
+
 ############################################################
 # Define your own dependencies here using go_repository.
 # Else, dependencies declared by rules_go/gazelle will be used.
