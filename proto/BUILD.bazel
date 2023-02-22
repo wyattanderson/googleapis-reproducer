@@ -2,7 +2,7 @@ load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", "write_source_files")
-load("@aspect_bazel_lib//lib:output_files.bzl", "output_files")
+load("@aspect_bazel_lib//lib:output_files.bzl", "make_output_files")
 
 proto_library(
     name = "proto_proto",
@@ -26,18 +26,14 @@ go_library(
     visibility = ["//visibility:public"],
 )
 
-output_files(
-    name = "vision.pb.go",
-    output_group = "go_generated_srcs",
-    paths = [
-        "proto/proto_go_proto_/github.com/wyattanderson/googleapis-reproducer/proto/vision.pb.go",
-    ],
-    target = ":proto_go_proto",
-)
-
 write_source_files(
     name = "write_files",
     files = {
-        "vision.pb.go": ":vision.pb.go",
+        "vision.pb.go": make_output_files(
+            "vision_pb_go",
+            ":proto_go_proto",
+            ["proto/proto_go_proto_/github.com/wyattanderson/googleapis-reproducer/proto/vision.pb.go"],
+            output_group = "go_generated_srcs",
+        ),
     },
 )
