@@ -1,6 +1,13 @@
-package v2
+package main
 
 import (
 	_ "cloud.google.com/go/vision/v2/apiv1"
 	_ "cloud.google.com/go/vision/v2/apiv1/visionpb"
+	_ "google.golang.org/grpc"
+
+	_ "github.com/wyattanderson/googleapis-reproducer/proto"
 )
+
+func main() {
+
+}

@@ -554,6 +554,9 @@ go_repository(
 
 go_repository(
     name = "com_google_cloud_go_longrunning",
+    build_directives = [
+        "gazelle:resolve go google.golang.org/genproto/googleapis/longrunning @org_golang_google_genproto//googleapis/longrunning",  # keep
+    ],
     importpath = "cloud.google.com/go/longrunning",
     sum = "h1:NjljC+FYPV3uh5/OwWT6pVU+doBqMg2x/rZlE+CamDs=",
     version = "v0.3.0",
@@ -890,6 +893,9 @@ go_repository(
 
 go_repository(
     name = "com_google_cloud_go_vision_v2",
+    build_directives = [
+        "gazelle:resolve go google.golang.org/genproto/googleapis/longrunning @org_golang_google_genproto//googleapis/longrunning",  # keep
+    ],
     importpath = "cloud.google.com/go/vision/v2",
     sum = "h1:TQHxRqvLMi19azwm3qYuDbEzZWmiKJNTpGbkNsfRCik=",
     version = "v2.5.0",
@@ -1310,6 +1316,9 @@ go_repository(
 
 go_repository(
     name = "com_google_cloud_go_vision",
+    build_directives = [
+        "gazelle:resolve go google.golang.org/genproto/googleapis/longrunning @org_golang_google_genproto//googleapis/longrunning",  # keep
+    ],
     importpath = "cloud.google.com/go/vision",
     sum = "h1:/CsSTkbmO9HC8iQpxbK8ATms3OQaX3YQUeTMGCxlaK4=",
     version = "v1.2.0",
