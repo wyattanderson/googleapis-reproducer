@@ -1485,12 +1485,15 @@ protobuf_deps()
 
 http_archive(
     name = "com_google_googleapis",
-    sha256 = "ba694861340e792fd31cb77274eacaf6e4ca8bda97707898f41d8bebfd8a4984",
-    strip_prefix = "googleapis-83c3605afb5a39952bf0a0809875d41cf2a558ca",
-    # master, as of 2022-12-05
+    patch_args = [
+        "-E",
+        "-p1",
+    ],
+    patches = ["//patches:com_google_googleapis-importpath.patch"],
+    sha256 = "2e9318bb6f3b12c3ee4f0014249c065dc5883c36621bee24e1e805fbf02ca32a",
+    strip_prefix = "googleapis-d30f4754a7f97a6ca5ada83507b0a0d365739818",
     urls = [
-        "https://mirror.bazel.build/github.com/googleapis/googleapis/archive/83c3605afb5a39952bf0a0809875d41cf2a558ca.zip",
-        "https://github.com/googleapis/googleapis/archive/83c3605afb5a39952bf0a0809875d41cf2a558ca.zip",
+        "https://github.com/googleapis/googleapis/archive/d30f4754a7f97a6ca5ada83507b0a0d365739818.zip",
     ],
 )
 
@@ -1498,5 +1501,4 @@ load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_languag
 
 switched_rules_by_language(
     name = "com_google_googleapis_imports",
-    go = True,
 )

@@ -7,7 +7,7 @@
 package proto
 
 import (
-	v1 "google.golang.org/genproto/googleapis/cloud/vision/v1"
+	visionpb "cloud.google.com/go/vision/v2/apiv1/visionpb"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -89,8 +89,8 @@ type GoogleCloudVision_Blocks struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	RawText     string       `protobuf:"bytes,1,opt,name=raw_text,json=rawText,proto3" json:"raw_text,omitempty"`
-	BoundingBox []*v1.Vertex `protobuf:"bytes,2,rep,name=bounding_box,json=boundingBox,proto3" json:"bounding_box,omitempty"`
+	RawText     string             `protobuf:"bytes,1,opt,name=raw_text,json=rawText,proto3" json:"raw_text,omitempty"`
+	BoundingBox []*visionpb.Vertex `protobuf:"bytes,2,rep,name=bounding_box,json=boundingBox,proto3" json:"bounding_box,omitempty"`
 }
 
 func (x *GoogleCloudVision_Blocks) Reset() {
@@ -132,7 +132,7 @@ func (x *GoogleCloudVision_Blocks) GetRawText() string {
 	return ""
 }
 
-func (x *GoogleCloudVision_Blocks) GetBoundingBox() []*v1.Vertex {
+func (x *GoogleCloudVision_Blocks) GetBoundingBox() []*visionpb.Vertex {
 	if x != nil {
 		return x.BoundingBox
 	}
@@ -187,7 +187,7 @@ var file_proto_vision_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_vision_proto_goTypes = []interface{}{
 	(*GoogleCloudVision)(nil),        // 0: proto.GoogleCloudVision
 	(*GoogleCloudVision_Blocks)(nil), // 1: proto.GoogleCloudVision.Blocks
-	(*v1.Vertex)(nil),                // 2: google.cloud.vision.v1.Vertex
+	(*visionpb.Vertex)(nil),          // 2: google.cloud.vision.v1.Vertex
 }
 var file_proto_vision_proto_depIdxs = []int32{
 	1, // 0: proto.GoogleCloudVision.raw_receipt_blocks:type_name -> proto.GoogleCloudVision.Blocks
