@@ -565,9 +565,7 @@ go_repository(
 
 go_repository(
     name = "com_google_cloud_go_longrunning",
-    build_directives = [
-        "gazelle:resolve go google.golang.org/genproto/googleapis/longrunning @org_golang_google_genproto//googleapis/longrunning",  # keep
-    ],
+    build_file_proto_mode = "disable_global",
     importpath = "cloud.google.com/go/longrunning",
     sum = "h1:NjljC+FYPV3uh5/OwWT6pVU+doBqMg2x/rZlE+CamDs=",
     version = "v0.3.0",
@@ -904,9 +902,7 @@ go_repository(
 
 go_repository(
     name = "com_google_cloud_go_vision_v2",
-    build_directives = [
-        "gazelle:resolve go google.golang.org/genproto/googleapis/longrunning @org_golang_google_genproto//googleapis/longrunning",  # keep
-    ],
+    build_file_proto_mode = "disable_global",
     importpath = "cloud.google.com/go/vision/v2",
     sum = "h1:TQHxRqvLMi19azwm3qYuDbEzZWmiKJNTpGbkNsfRCik=",
     version = "v2.5.0",
@@ -970,6 +966,7 @@ go_repository(
 
 go_repository(
     name = "org_golang_google_grpc",
+    build_file_proto_mode = "disable_global",
     importpath = "google.golang.org/grpc",
     sum = "h1:LAv2ds7cmFV/XTS3XG1NneeENYrXGmorPxsBbptIjNc=",
     version = "v1.53.0",
@@ -1327,9 +1324,7 @@ go_repository(
 
 go_repository(
     name = "com_google_cloud_go_vision",
-    build_directives = [
-        "gazelle:resolve go google.golang.org/genproto/googleapis/longrunning @org_golang_google_genproto//googleapis/longrunning",  # keep
-    ],
+    build_file_proto_mode = "disable_global",
     importpath = "cloud.google.com/go/vision",
     sum = "h1:/CsSTkbmO9HC8iQpxbK8ATms3OQaX3YQUeTMGCxlaK4=",
     version = "v1.2.0",
@@ -1487,3 +1482,21 @@ http_archive(
 load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
 
 protobuf_deps()
+
+http_archive(
+    name = "com_google_googleapis",
+    sha256 = "ba694861340e792fd31cb77274eacaf6e4ca8bda97707898f41d8bebfd8a4984",
+    strip_prefix = "googleapis-83c3605afb5a39952bf0a0809875d41cf2a558ca",
+    # master, as of 2022-12-05
+    urls = [
+        "https://mirror.bazel.build/github.com/googleapis/googleapis/archive/83c3605afb5a39952bf0a0809875d41cf2a558ca.zip",
+        "https://github.com/googleapis/googleapis/archive/83c3605afb5a39952bf0a0809875d41cf2a558ca.zip",
+    ],
+)
+
+load("@com_google_googleapis//:repository_rules.bzl", "switched_rules_by_language")
+
+switched_rules_by_language(
+    name = "com_google_googleapis_imports",
+    go = True,
+)

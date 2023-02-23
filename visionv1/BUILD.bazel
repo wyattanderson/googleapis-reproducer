@@ -1,20 +1,20 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 go_library(
-    name = "googleapis-reproducer",
+    name = "visionv1_lib",
     srcs = ["main.go"],
-    importpath = "github.com/wyattanderson/googleapis-reproducer/v1",
-    visibility = ["//visibility:public"],
+    importpath = "github.com/wyattanderson/googleapis-reproducer/visionv1",
+    visibility = ["//visibility:private"],
     deps = [
         "//proto",
         "@com_google_cloud_go_vision//apiv1",
-        "@go_googleapis//google/cloud/vision/v1:vision_go_proto",
+        "@org_golang_google_genproto//googleapis/cloud/vision/v1:vision",
         "@org_golang_google_grpc//:go_default_library",
     ],
 )
 
 go_binary(
-    name = "v1",
-    embed = [":googleapis-reproducer"],
+    name = "visionv1",
+    embed = [":visionv1_lib"],
     visibility = ["//visibility:public"],
 )

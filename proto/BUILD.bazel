@@ -1,3 +1,5 @@
+# gazelle:resolve proto google/cloud/vision/v1/geometry.proto @com_google_googleapis//google/cloud/vision/v1:vision_proto
+# gazelle:resolve proto go google/cloud/vision/v1/geometry.proto @org_golang_google_genproto//googleapis/cloud/vision/v1:go_default_library
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
@@ -8,7 +10,7 @@ proto_library(
     name = "proto_proto",
     srcs = ["vision.proto"],
     visibility = ["//visibility:public"],
-    deps = ["@go_googleapis//google/cloud/vision/v1:vision_proto"],
+    deps = ["@com_google_googleapis//google/cloud/vision/v1:vision_proto"],
 )
 
 go_proto_library(
@@ -16,7 +18,7 @@ go_proto_library(
     importpath = "github.com/wyattanderson/googleapis-reproducer/proto",
     proto = ":proto_proto",
     visibility = ["//visibility:public"],
-    deps = ["@go_googleapis//google/cloud/vision/v1:vision_go_proto"],
+    deps = ["@org_golang_google_genproto//googleapis/cloud/vision/v1:go_default_library"],
 )
 
 go_library(
