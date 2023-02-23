@@ -3,14 +3,9 @@ package proto;
 option go_package = "github.com/wyattanderson/googleapis-reproducer/proto";
 
 import "google/cloud/vision/v1/geometry.proto";
+import "google/protobuf/duration.proto";
 
 message GoogleCloudVision {
-  message Blocks {
-    string raw_text = 1;
-    repeated google.cloud.vision.v1.Vertex bounding_box = 2;
-  }
-
-  string raw_receipt_text = 1;
-  repeated Blocks raw_receipt_blocks = 2;
-  string locale_language = 3;
+    google.cloud.vision.v1.Vertex bounding_box = 1;
+    google.protobuf.Duration duration = 2;
 }

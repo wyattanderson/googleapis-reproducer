@@ -10,7 +10,10 @@ proto_library(
     name = "proto_proto",
     srcs = ["vision.proto"],
     visibility = ["//visibility:public"],
-    deps = ["@com_google_googleapis//google/cloud/vision/v1:vision_proto"],
+    deps = [
+        "@com_google_googleapis//google/cloud/vision/v1:vision_proto",
+        "@com_google_protobuf//:duration_proto",
+    ],
 )
 
 go_proto_library(
