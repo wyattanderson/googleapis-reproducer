@@ -1,5 +1,8 @@
 # gazelle:resolve proto google/cloud/vision/v1/geometry.proto @com_google_googleapis//google/cloud/vision/v1:vision_proto
 # gazelle:resolve proto go google/cloud/vision/v1/geometry.proto @com_google_cloud_go_vision_v2//apiv1/visionpb
+# gazelle:resolve proto google/protobuf/duration.proto @com_google_protobuf//:duration_proto
+# gazelle:resolve proto go google/protobuf/duration.proto @org_golang_google_protobuf//types/known/durationpb
+
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
@@ -11,8 +14,8 @@ proto_library(
     srcs = ["vision.proto"],
     visibility = ["//visibility:public"],
     deps = [
+        "//google/protobuf:protobuf_proto",
         "@com_google_googleapis//google/cloud/vision/v1:vision_proto",
-        "@com_google_protobuf//:duration_proto",
     ],
 )
 
@@ -21,7 +24,10 @@ go_proto_library(
     importpath = "github.com/wyattanderson/googleapis-reproducer/proto",
     proto = ":proto_proto",
     visibility = ["//visibility:public"],
-    deps = ["@com_google_cloud_go_vision_v2//apiv1/visionpb"],
+    deps = [
+        "//google/protobuf:duration_proto",
+        "@com_google_cloud_go_vision_v2//apiv1/visionpb",
+    ],
 )
 
 go_library(

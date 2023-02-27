@@ -1,0 +1,63 @@
+diff --git a/go/private/repositories.bzl b/go/private/repositories.bzl
+index 2b48311e..60ab36af 100644
+--- a/go/private/repositories.bzl
++++ b/go/private/repositories.bzl
+@@ -154,29 +154,6 @@ def go_rules_dependencies(force = False):
+         patch_args = ["-p1"],
+     )
+ 
+-    # Legacy protobuf compiler, runtime, and utilities.
+-    # We still use protoc-gen-go because the new one doesn't support gRPC, and
+-    # the gRPC compiler doesn't exist yet.
+-    # We need to apply a patch to enable both go_proto_library and
+-    # go_library with pre-generated sources.
+-    # releaser:upgrade-dep golang protobuf
+-    wrapper(
+-        http_archive,
+-        name = "com_github_golang_protobuf",
+-        # v1.5.2, latest as of 2023-01-22
+-        urls = [
+-            "https://mirror.bazel.build/github.com/golang/protobuf/archive/refs/tags/v1.5.2.zip",
+-            "https://github.com/golang/protobuf/archive/refs/tags/v1.5.2.zip",
+-        ],
+-        sha256 = "5bd0a70e2f3829db9d0e340887af4e921c5e0e5bb3f8d1be49a934204cb16445",
+-        strip_prefix = "protobuf-1.5.2",
+-        patches = [
+-            # releaser:patch-cmd gazelle -repo_root . -go_prefix github.com/golang/protobuf -go_naming_convention import_alias -proto disable_global
+-            Label("//third_party:com_github_golang_protobuf-gazelle.patch"),
+-        ],
+-        patch_args = ["-p1"],
+-    )
+-
+     # Extra protoc plugins and libraries.
+     # Doesn't belong here, but low maintenance.
+     # releaser:upgrade-dep mwitkow go-proto-validators
+@@ -216,28 +193,6 @@ def go_rules_dependencies(force = False):
+         name = "gogo_special_proto",
+     )
+ 
+-    # go_library targets with pre-generated sources for Well Known Types
+-    # and Google APIs.
+-    # Doesn't belong here, but it would be an annoying source of errors if
+-    # this weren't generated with -proto disable_global.
+-    # releaser:upgrade-dep googleapis go-genproto
+-    wrapper(
+-        http_archive,
+-        name = "org_golang_google_genproto",
+-        # main, as of 2023-01-22
+-        urls = [
+-            "https://mirror.bazel.build/github.com/googleapis/go-genproto/archive/9d59e20e5cd16f7c64a2107aeec4c4e843a6df73.zip",
+-            "https://github.com/googleapis/go-genproto/archive/9d59e20e5cd16f7c64a2107aeec4c4e843a6df73.zip",
+-        ],
+-        sha256 = "8896d6cf7041c5300d4e3963887fc50a641f0afa969d2bc9323879a6b8c80ce4",
+-        strip_prefix = "go-genproto-9d59e20e5cd16f7c64a2107aeec4c4e843a6df73",
+-        patches = [
+-            # releaser:patch-cmd gazelle -repo_root . -go_prefix google.golang.org/genproto -go_naming_convention import_alias -proto disable_global
+-            Label("//third_party:org_golang_google_genproto-gazelle.patch"),
+-        ],
+-        patch_args = ["-p1"],
+-    )
+-
+     # go_proto_library targets for gRPC and Google APIs.
+     # TODO(#1986): migrate to com_google_googleapis. This workspace was added
+     # before the real workspace supported Bazel. Gazelle resolves dependencies

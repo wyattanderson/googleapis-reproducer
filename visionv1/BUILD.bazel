@@ -9,7 +9,7 @@ go_library(
         "//proto",
         "@com_google_cloud_go_vision//apiv1",
         "@org_golang_google_genproto//googleapis/cloud/vision/v1:vision",
-        "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_grpc//:grpc",
     ],
 )
 

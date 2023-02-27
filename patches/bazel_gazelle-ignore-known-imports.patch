@@ -1,0 +1,122 @@
+diff --git a/language/go/generate.go b/language/go/generate.go
+index 9d4e937..29e4489 100644
+--- a/language/go/generate.go
++++ b/language/go/generate.go
+@@ -275,9 +275,6 @@ func (gl *goLang) GenerateRules(args language.GenerateArgs) language.GenerateRes
+ 		}
+ 		rules = append(rules, lib)
+ 		g.maybePublishToolLib(lib, pkg)
+-		if r := g.maybeGenerateExtraLib(lib, pkg); r != nil {
+-			rules = append(rules, r)
+-		}
+ 		if r := g.maybeGenerateAlias(pkg, libName); r != nil {
+ 			g.maybePublishToolLib(r, pkg)
+ 			rules = append(rules, r)
+diff --git a/language/go/resolve.go b/language/go/resolve.go
+index afa66fe..51ba8e0 100644
+--- a/language/go/resolve.go
++++ b/language/go/resolve.go
+@@ -284,10 +284,6 @@ func resolveVendored(gc *goConfig, imp string) (label.Label, error) {
+ }
+ 
+ func resolveProto(c *config.Config, ix *resolve.RuleIndex, rc *repo.RemoteCache, imp string, from label.Label) (label.Label, error) {
+-	if wellKnownProtos[imp] {
+-		return label.NoLabel, errSkipImport
+-	}
+-
+ 	if l, ok := resolve.FindRuleWithOverride(c, resolve.ImportSpec{Lang: "proto", Imp: imp}, "go"); ok {
+ 		return l, nil
+ 	}
+@@ -313,25 +309,6 @@ func resolveProto(c *config.Config, ix *resolve.RuleIndex, rc *repo.RemoteCache,
+ 	return label.New("", rel, libName), nil
+ }
+ 
+-// wellKnownProtos is the set of proto sets for which we don't need to add
+-// an explicit dependency in go_proto_library.
+-// TODO(jayconrod): generate from
+-// @io_bazel_rules_go//proto/wkt:WELL_KNOWN_TYPE_PACKAGES
+-var wellKnownProtos = map[string]bool{
+-	"google/protobuf/any.proto":             true,
+-	"google/protobuf/api.proto":             true,
+-	"google/protobuf/compiler/plugin.proto": true,
+-	"google/protobuf/descriptor.proto":      true,
+-	"google/protobuf/duration.proto":        true,
+-	"google/protobuf/empty.proto":           true,
+-	"google/protobuf/field_mask.proto":      true,
+-	"google/protobuf/source_context.proto":  true,
+-	"google/protobuf/struct.proto":          true,
+-	"google/protobuf/timestamp.proto":       true,
+-	"google/protobuf/type.proto":            true,
+-	"google/protobuf/wrappers.proto":        true,
+-}
+-
+ func resolveWithIndexProto(c *config.Config, ix *resolve.RuleIndex, imp string, from label.Label) (label.Label, error) {
+ 	matches := ix.FindRulesByImportWithConfig(c, resolve.ImportSpec{Lang: "proto", Imp: imp}, "go")
+ 	if len(matches) == 0 {
+diff --git a/language/proto/resolve.go b/language/proto/resolve.go
+index 6458a56..ebfe01f 100644
+--- a/language/proto/resolve.go
++++ b/language/proto/resolve.go
+@@ -109,7 +109,6 @@ var (
+ )
+ 
+ func resolveProto(c *config.Config, ix *resolve.RuleIndex, r *rule.Rule, imp string, from label.Label) (label.Label, error) {
+-	pc := GetProtoConfig(c)
+ 	if !strings.HasSuffix(imp, ".proto") {
+ 		return label.NoLabel, fmt.Errorf("can't import non-proto: %q", imp)
+ 	}
+@@ -118,14 +117,6 @@ func resolveProto(c *config.Config, ix *resolve.RuleIndex, r *rule.Rule, imp str
+ 		return l, nil
+ 	}
+ 
+-	if l, ok := knownImports[imp]; ok && pc.Mode.ShouldUseKnownImports() {
+-		if l.Equal(from) {
+-			return label.NoLabel, errSkipImport
+-		} else {
+-			return l, nil
+-		}
+-	}
+-
+ 	if l, err := resolveWithIndex(c, ix, imp, from); err == nil || err == errSkipImport {
+ 		return l, err
+ 	} else if err != errNotFound {
+@@ -156,39 +147,5 @@ func resolveWithIndex(c *config.Config, ix *resolve.RuleIndex, imp string, from
+ 
+ // CrossResolve provides dependency resolution logic for the go language extension.
+ func (*protoLang) CrossResolve(c *config.Config, ix *resolve.RuleIndex, imp resolve.ImportSpec, lang string) []resolve.FindResult {
+-	if lang != "go" {
+-		return nil
+-	}
+-	pc := GetProtoConfig(c)
+-	if imp.Lang == "proto" && pc.Mode.ShouldUseKnownImports() {
+-		if l, ok := knownProtoImports[imp.Imp]; ok {
+-			return []resolve.FindResult{{Label: l}}
+-		}
+-	}
+-	if imp.Lang == "go" && pc.Mode.ShouldUseKnownImports() {
+-		// These are commonly used libraries that depend on Well Known Types.
+-		// They depend on the generated versions of these protos to avoid conflicts.
+-		// However, since protoc-gen-go depends on these libraries, we generate
+-		// its rules in disable_global mode (to avoid cyclic dependency), so the
+-		// "go_default_library" versions of these libraries depend on the
+-		// pre-generated versions of the proto libraries.
+-		switch imp.Imp {
+-		case "github.com/golang/protobuf/proto":
+-			return []resolve.FindResult{{Label: label.New("com_github_golang_protobuf", "proto", "go_default_library")}}
+-		case "github.com/golang/protobuf/jsonpb":
+-			return []resolve.FindResult{{Label: label.New("com_github_golang_protobuf", "jsonpb", "go_default_library_gen")}}
+-		case "github.com/golang/protobuf/descriptor":
+-			return []resolve.FindResult{{Label: label.New("com_github_golang_protobuf", "descriptor", "go_default_library_gen")}}
+-		case "github.com/golang/protobuf/ptypes":
+-			return []resolve.FindResult{{Label: label.New("com_github_golang_protobuf", "ptypes", "go_default_library_gen")}}
+-		case "github.com/golang/protobuf/protoc-gen-go/generator":
+-			return []resolve.FindResult{{Label: label.New("com_github_golang_protobuf", "protoc-gen-go/generator", "go_default_library_gen")}}
+-		case "google.golang.org/grpc":
+-			return []resolve.FindResult{{Label: label.New("org_golang_google_grpc", "", "go_default_library")}}
+-		}
+-		if l, ok := knownGoProtoImports[imp.Imp]; ok {
+-			return []resolve.FindResult{{Label: l}}
+-		}
+-	}
+ 	return nil
+ }
