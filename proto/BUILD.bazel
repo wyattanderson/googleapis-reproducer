@@ -1,7 +1,10 @@
 # gazelle:resolve proto google/cloud/vision/v1/geometry.proto @com_google_googleapis//google/cloud/vision/v1:vision_proto
 # gazelle:resolve proto go google/cloud/vision/v1/geometry.proto @com_google_cloud_go_vision_v2//apiv1/visionpb
+
 # gazelle:resolve proto google/protobuf/duration.proto @com_google_protobuf//:duration_proto
 # gazelle:resolve proto go google/protobuf/duration.proto @org_golang_google_protobuf//types/known/durationpb
+# gazelle:resolve proto google/protobuf/any.proto @com_google_protobuf//:any_proto
+# gazelle:resolve proto go google/protobuf/any.proto @org_golang_google_protobuf//types/known/anypb
 
 load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
@@ -11,11 +14,15 @@ load("@aspect_bazel_lib//lib:output_files.bzl", "make_output_files")
 
 proto_library(
     name = "proto_proto",
-    srcs = ["vision.proto"],
+    srcs = [
+        "any.proto",
+        "vision.proto",
+    ],
     visibility = ["//visibility:public"],
     deps = [
-        "//google/protobuf:protobuf_proto",
         "@com_google_googleapis//google/cloud/vision/v1:vision_proto",
+        "@com_google_protobuf//:any_proto",
+        "@com_google_protobuf//:duration_proto",
     ],
 )
 
@@ -25,8 +32,9 @@ go_proto_library(
     proto = ":proto_proto",
     visibility = ["//visibility:public"],
     deps = [
-        "//google/protobuf:duration_proto",
         "@com_google_cloud_go_vision_v2//apiv1/visionpb",
+        "@org_golang_google_protobuf//types/known/anypb",
+        "@org_golang_google_protobuf//types/known/durationpb",
     ],
 )
 
@@ -38,12 +46,24 @@ go_library(
 )
 
 write_source_files(
-    name = "write_files",
+    name = "write_vision",
     files = {
         "vision.pb.go": make_output_files(
             "vision_pb_go",
             ":proto_go_proto",
             ["proto/proto_go_proto_/github.com/wyattanderson/googleapis-reproducer/proto/vision.pb.go"],
+            output_group = "go_generated_srcs",
+        ),
+    },
+)
+
+write_source_files(
+    name = "write_any",
+    files = {
+        "any.pb.go": make_output_files(
+            "any_pb_go",
+            ":proto_go_proto",
+            ["proto/proto_go_proto_/github.com/wyattanderson/googleapis-reproducer/proto/any.pb.go"],
             output_group = "go_generated_srcs",
         ),
     },
