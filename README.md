@@ -83,8 +83,15 @@ faces the same fate.
   targets](https://github.com/grpc-ecosystem/grpc-gateway/blob/0eb17c3d70415c44406b0f02265ceaad570d6fa3/runtime/BUILD.bazel#L30)
   behave correctly when referenced as a `go_repository`.
 - I've included `@com_google_googleapis` directly and specified Gazelle
-  directives to point to it as necessary.
+  directives to point to it as necessary from Protobuf. I've also patched it
+  [to fix an incorrect `go_package`
+  option](https://github.com/googleapis/googleapis/pull/782).
 
 ## The Result
 
-Everything builds under Bazel and under Go native tooling. Rejoice.
+Everything builds under Bazel and under Go native tooling. Rejoice. I think it
+would be nice if the ecosystem could move in this direction if there aren't
+any major downsides I'm missing. It could be helpful to provide a default set
+of directives people can use for setting up Gazelle to understand Go
+resolution, but it would be nice if this was explicit instead of magical like
+it is now.
