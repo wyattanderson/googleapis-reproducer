@@ -72,15 +72,10 @@ protobuf_deps()
 
 http_archive(
     name = "com_google_googleapis",
-    patch_args = [
-        "-E",
-        "-p1",
-    ],
-    patches = ["//patches:com_google_googleapis-importpath.patch"],
-    sha256 = "2e9318bb6f3b12c3ee4f0014249c065dc5883c36621bee24e1e805fbf02ca32a",
-    strip_prefix = "googleapis-d30f4754a7f97a6ca5ada83507b0a0d365739818",
+    sha256 = "9a106bbb387d2d6eeb7bcd5a4494cff6fa892eb9e92f128d9daf9f0515392f98",
+    strip_prefix = "googleapis-117be9dfdf65ff766a794c8b85d5d7480a1fd83d",
     urls = [
-        "https://github.com/googleapis/googleapis/archive/d30f4754a7f97a6ca5ada83507b0a0d365739818.zip",
+        "https://github.com/googleapis/googleapis/archive/117be9dfdf65ff766a794c8b85d5d7480a1fd83d.zip",
     ],
 )
 
